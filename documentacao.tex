@@ -1,0 +1,78 @@
+\documentclass{article}
+\usepackage[document]{ragged2e}
+\usepackage{graphicx}
+
+\begin{document}
+
+\noindent
+Universidade Federal do Rio Grande do Sul \hfill Instituto de Inform\'atica \newline
+INF05005 -- Linguagens Formais e Aut\^omatos \hfill 2019/1 \newline
+Anderson Rieger da Luz \hfill 00274725 \newline
+Henry Bernardo Kochenborger de Avila \hfill 00301161 \newline
+João Davi Martins Nunes \hfill 00285639
+\rule{\linewidth}{1.pt}
+
+\section*{Vending Machine como linguagens regulares}
+
+\par
+  Linguagens regulares podem ser utilizadas para modelagem de in\'umeros problemas presentes no dia-a-dia das pessoas. Um exemplo simples é o funcionamento de uma vending machine (m\'aquina autom\'atica de venda). Para esse tipo de aparelho, \'e necess\'ario que ela execute diversas fun\c{c}\~oes de acordo com o pedido do usu\'ario, como interpreta\c{c}\~ao do valor dado por ele e entender, por exemplo, qual produto ele est\'a pedindo, considerando o valor dado anteriormente. \newline
+  Este trabalho tem a inten\c{c}\~ao de exemplificar uma vending machine te\'orica em termos de uma linguagem regular. Para isso, ser\'a utilizado um aut\^omato finito que aceite essa linguagem.
+
+\subsection*{\centering Linguagem}
+
+\subsubsection*{Descri\c{c}\~ao:}
+
+\par A m\'aquina trabalhada \'e uma vending machine que aceita dois tipos de moedas: moedas de R\$1,00 e R\$0,50. Ademais, essa m\'aquina possui 5 produtos diferentes, sendo eles:
+\begin{itemize}
+  \item M\&M's, custando R\$4,00.
+  \item Snickers, custando R\$3,50.
+  \item Kit-Kat, custando R\$2,00.
+  \item Halls, custando R\$1,50.
+  \item \'Agua, custando R\$1,50.
+\end{itemize}
+Al\'em diso, o comprador poder\'a pedir o dinheiro de volta antes de realizar o pedido apertando o bot\~ao "CANCELA". Quando apertado, a m\'aquina devolve o dinheiro inserido (dado pelo valor de cr\'editos presente na m\'aquina) com moedas de R\$1,00 ou R\$0,50. \newline
+A linguagem referente a esta m\'aquina trata-se de uma sequ\^encia de pedidos coerentes, considerando a ordem em que s\~ao feitos, que resultam em devolu\c{c}\~ao do dinheiro ou aquisi\c{c}\~ao do produto com devolu\c{c}\~ao de eventual troco - sendo que a n\~ao realiza\c{c}\~ao de pedidos tamb\'em \'e uma palavra aceita pela linguagem. \newline
+Assim sendo, a linguagem que realiza tais procedimentos \'e: \\
+$L = \{ w | w$ \'e uma sequ\^encia de intera\c{c}\~oes entre o comprador e a m\'aquina que resulta na devolu\c{c}\~ao do dinheiro ou da compra de um produto e a devolu\c{c}\~ao do devido troco. $\}$
+
+\subsubsection*{Aut\^omato:}
+\par Como visto anteriormente, esta m\'aquina pode ser modelada como uma linguagem regular e, para isso, utilizaremos um aut\^omato para reconhec\^e-la. Portanto, o autom\^ato M que reconhece esta linguagem \'e uma 6-upla dada por $\{Q, \Sigma, \delta, q_0, F\}$, onde:
+\begin{itemize}
+  \item $Q = \{ q_{0}, q_{1}, q_{2}, q_{3}, q_{4}, q_{5}, q_{6}, q_{7}, q_{8}, q_{9}, q_{10}, q_{11}\}$
+  \item $\Sigma = \{ s | s$ \'e um s\'imbolo que representa uma intera\c{c}\~ao entre o comprador e a m\'aquina. $\} = \{ 50c, 1R, I_{0}, I_{1}, I_{2}, I_{3}, I_{4}, X\}$, sendo que:
+        \begin{itemize}
+          \item 50c: trata-se da inser\c{c}\~ao, realizado pelo usu\'ario, de uma moeda de R\$0,50 na m\'aquina.
+          \item 1R: trata-se da inser\c{c}\~ao, realizado pelo usu\'ario, de uma moeda de R\$1,00 na m\'aquina.
+          \item $I_{0}$: trata-se do pedido, realizado pelo usu\'ario, para comprar um M\&M's do estoque da m\'aquina.
+          \item $I_{1}$: trata-se do pedido, realizado pelo usu\'ario, para comprar um Snickers do estoque da m\'aquina.
+          \item $I_{2}$: trata-se do pedido, realizado pelo usu\'ario, para comprar um Kit-Kat do estoque da m\'aquina.
+          \item $I_{3}$: trata-se do pedido, realizado pelo usu\'ario, para comprar um Halls do estoque da m\'aquina.
+          \item $I_{4}$: trata-se do pedido, realizado pelo usu\'ario, para comprar um \'Agua do estoque da m\'aquina.
+          \item X: trata-se do pedido, realizado pelo usu\'ario, para devolver o dinheiro inserido na m\'aquina - s\'o sendo poss\'ivel antes da realiza\c{c}\~ao do pedido de item.
+        \end{itemize}
+  \item $F = \{ q_{0}, q_{10}, q_{11} \}$
+\end{itemize}
+
+\includegraphics[scale=0.18]{VendingMachine}
+
+\subsubsection*{Exemplos de palavras:}
+\par Para que a palavra seja aceita, ela deve gerar um caminho coerente com t\'ermino em um estado final. Portanto, considerando o aut\^omato acima, as seguintes palavras pertencem a linguagem:
+\begin{itemize}
+  \item $\varepsilon$: n\~ao intera\c{c}\~ao com a m\'aquina.
+  \item $50cX$: sequ\^encia de procedimentos dada por inser\c{c}\~ao de 50 centavos e o pedido de devolu\c{c}\~ao de dinheiro.
+  \item $1R50cI_{4}$: sequ\^encia de procedimentos dada por inser\c{c}\~ao de 1 real, inser\c{c}\~ao de 50 centavos e a compra de uma \'Agua.
+  \item $1R1R1RI_{2}$: sequ\^encia de procedimentos dada por 3 inser\c{c}\~oes seguidas de 1 real e o pedido da entrega do Kit-Kat.
+  \item $1R1R1R1R1R1RI_{4}$: sequ\^encia de procedimentos dada por 6 inser\c{c}\~oes de 1 real e a compra de uma \'Agua.
+\end{itemize}
+Contudo, o usu\'ario pode, ainda, tentar realizar pedidos que n\~ao fazem sentido ou n\~ao s\~ao permitidos, como a devolu\c{c}\~ao de dinheiro sem a inser\c{c}\~ao anterior ou a compra de um produto sem o devido n\'umero de cr\'editos. Sendo assim, as seguintes palavras n\~ao pertencem a linguagem:
+\begin{itemize}
+  \item $X$: pedido de devolu\c{c}\~ao de dinheiro.
+  \item $I_{1}$: pedido de compra de um Snickers.
+  \item $50cI_{0}$: sequ\^encia de procedimentos dada por inser\c{c}\~ao de 50 centavos e pedido de entrega de um M\&M's.
+  \item $1R1RI_{1}$: sequ\^encia de procedimentos dada por 2 inser\c{c}\~oes de 1 real e pedido de entrega do Snickers.
+  \item $1R1R1R1RI_{3}I_{4}$: sequ\^encia de procedimentos dada por 4 inser\c{c}\~oes de 1 real, pedido de entrega de um Halls e pedido de entrega de uma \'Agua.
+\end{itemize}
+
+
+
+\end{document}
