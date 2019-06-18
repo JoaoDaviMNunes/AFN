@@ -89,7 +89,7 @@ class automata:
 				else:
 					return False
 			else:
-				for i in range(0,len(string)+1):
+				for i in range(1,len(string)+1):
 					transitions = automata.getTransitions(currentState, string[0:i])
 					for transition in transitions:
 						boolFlag = boolFlag or checkWordRecursive(automata, transition[2], string[i:])
@@ -379,6 +379,12 @@ def writeInFile(DFA, filename):
 
 
 # --------------------------------------- Main ---------------------------------------
+# Entradas: autômato não-determinístico (arquivo de entrada no formato ja citado e com nome de "automato.txt") e lista de palavra para teste (dada em sequência).
+# Saída: autômato determinístico equivalentet ao dado na entrada (arquivo de saída com o mesmo formato do de entrada e com nome de "automatosaida.txt") e lista de booleanos referentes as palavras de testes (também dada em sequência).
+# Observação: Para cada palavra dada na parte do teste de palavras, se devolver true, significa que a palavra pertence a ACEITA(Md) tal que Md é o autômato determinístico equivalente
+#			ao não-determinístico dado pelo arquivo de entrada. Já, se devolver false, significa que a palavra não pertence a ACEITA(Md).
+# 			  As palavras dadas para teste do automato Md são informadas pelo usuário pelo teclado.
+#			  O resultado da pertinência da palavra na linguagem é informada no visor para cada palavra individualmente.
 automato = automata()
 aux = readFromFile(automato, "automato.txt")
 if aux != 0:
