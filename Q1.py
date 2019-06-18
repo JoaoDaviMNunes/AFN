@@ -89,9 +89,11 @@ class automata:
 				else:
 					return False
 			else:
-				transitions = automata.getTransitions(currentState, string[0])
-				for transition in transitions:
-					boolFlag = boolFlag or checkWordRecursive(automata, transition[2], string[1:])
+				for i in range(0,len(string)+1):
+					transitions = automata.getTransitions(currentState, string[0:i])
+					for transition in transitions:
+						boolFlag = boolFlag or checkWordRecursive(automata, transition[2], string[i:])
+						break
 				return boolFlag
 		return checkWordRecursive(self, self.initialState, string)
 
@@ -112,6 +114,9 @@ class automata:
 		DFAversion.alpha = self.alpha
 		DFAversion.insertState([self.initialState])
 		DFAversion.initialState = [self.initialState]
+
+		if self.initialState in self.finalStates:
+			DFAversion.insertFinalState([self.initialState])
 
 		for DFAstate in DFAversion.states:
 			for letter in DFAversion.alpha:
@@ -317,6 +322,62 @@ def readFromFile(automata, filename):
 	return 0
 
 
+# writeInFile(DFA, string) -> void
+# Objetivo: dado um autômato finito determinístico que foi feito apartir de uma conversão de um AFN para um AFD e um nome de um arquivo,
+#  a função cria um arquivo de texto (.txt) com o nome dado e escreve as informações desse autômato no seguinte formato:
+# 		<M>=({<q0>,...,<qn>},{<s1>,...,<sn>},<ini>,{ <f0>,...,<fn>})
+# 		Prog
+# 		(<q0>,<s1>)=<q1>
+# 		...
+# 		(<qn>,<sn>)=<q0>
+#
+# 		onde:
+# 		<M>: nome dado ao autômato;
+# 		<qi>: para 0 ≤ i ≤ n, com n ∈ N e n ≥ 0, representa um estado do autômato;
+# 		<si>: para 1 ≤ i ≤ n, com n ∈ N e n ≥ 1, representa um símbolo do alfabeto da
+# 			linguagem reconhecida pelo autômato;
+# 		<ini>: indica o estado inicial do autômato, sendo que ini é um estado do autômato;
+# 		<fi>: para 0 ≤ i ≤ n, com n ∈ N e n ≥ 0, representa um estado final do autômato,
+# 			sendo que fi é um estado do autômato;
+# 		(<qi>, <si>)=<qj>: descreve a função programa aplicada a um estado qi e um
+# 			símbolo de entrada si que leva a computação a um estado qj.
+def writeInFile(DFA, filename):
+	file = open(filename, "w")
+
+	file.write(DFA.name + '=' + '({')
+
+	count = 0
+	for state in DFA.states:
+		count += 1
+		string = str(state).replace(' ', "").replace(',', "").replace('[', '<').replace(']', '>').replace("'", "")
+		file.write(string)
+		if count < len(DFA.states):
+			file.write(',')
+	file.write('},{')
+	count = 0
+	for letter in DFA.alpha:
+		count += 1
+		file.write(letter)
+		if count < len(DFA.alpha):
+			file.write(',')
+	file.write('},')
+	file.write(str(DFA.initialState).replace(' ', "").replace(',', "").replace('[', '<').replace(']', '>').replace("'", ""))
+	file.write(',{')
+	count = 0
+	for state in DFA.finalStates:
+		count += 1
+		string = str(state).replace(' ', "").replace(',', "").replace('[', '<').replace(']', '>').replace("'", "")
+		file.write(string)
+		if count < len(DFA.finalStates):
+			file.write(',')
+	file.write('})\n')
+	file.write('Prog\n')
+	for transition in DFA.program:
+		file.write('(' + str(transition[0]).replace(' ', "").replace(',', "").replace('[', '<').replace(']', '>').replace("'", "") + ',' + transition[1] + ')=' + str(transition[2]).replace(' ', "").replace(',', "").replace('[', '<').replace(']', '>').replace("'", "") + '\n')
+
+
+
+
 # --------------------------------------- Main ---------------------------------------
 automato = automata()
 aux = readFromFile(automato, "automato.txt")
@@ -324,10 +385,11 @@ if aux != 0:
 	print("Erro " + str(aux) + " na leitura do arquivo.")
 else:
 	DFAversion = automato.convertToDFA()
-	word = input("Word: ")
-	while word != "Sair":
-		print(DFAversion.checkWord(word))
+	writeInFile(DFAversion, "automatosaida.txt")
+	print("Teste de palavras:")
+	while int(input("0-Sair\n1-Testar outra palavra\n")) != 0:
 		word = input("Word: ")
+		print(DFAversion.checkWord(word))
 
 
 
